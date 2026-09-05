@@ -348,6 +348,12 @@ button { font-family: inherit; cursor: pointer; }
   align-content: center;
 }
 
+.word-group {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.7rem;
+}
+
 .char-slot {
   display: flex;
   align-items: center;

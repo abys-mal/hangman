@@ -41,15 +41,27 @@
   function buildBoard(phrase) {
     wordBoard.innerHTML = "";
     const chars = phrase.split("");
+    let currentGroup = null;
     for (let idx = 0; idx < chars.length; idx++) {
       const ch = chars[idx];
+      if (ch === " ") {
+        currentGroup = null;
+        const slot = document.createElement("div");
+        slot.classList.add("char-slot", "space");
+        slot.dataset.index = String(idx);
+        slot.textContent = " ";
+        wordBoard.appendChild(slot);
+        continue;
+      }
+      if (!currentGroup) {
+        currentGroup = document.createElement("div");
+        currentGroup.className = "word-group";
+        wordBoard.appendChild(currentGroup);
+      }
       const slot = document.createElement("div");
       slot.classList.add("char-slot");
       slot.dataset.index = String(idx);
-      if (ch === " ") {
-        slot.classList.add("space");
-        slot.textContent = " ";
-      } else if (!isLetter(ch)) {
+      if (!isLetter(ch)) {
         slot.classList.add("punct");
         slot.textContent = ch;
       } else {
@@ -57,7 +69,7 @@
         slot.textContent = "_";
         slot.dataset.letter = ch.toUpperCase();
       }
-      wordBoard.appendChild(slot);
+      currentGroup.appendChild(slot);
     }
   }
 
@@ -166,7 +178,11 @@
   }
 
   function normalizeForCompare(str) {
-    return str.trim().toLowerCase().replace(/\s+/g, " ");
+    return str
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .trim()
+      .replace(/\s+/g, " ");
   }
 
   function guessWholePhrase(guess) {
