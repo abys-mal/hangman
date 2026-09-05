@@ -177,21 +177,25 @@
     }
   }
 
-  function normalizeForCompare(str) {
-    return str
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, "")
-      .trim()
-      .replace(/\s+/g, " ");
+  function normalizeWord(str) {
+    return str.toLowerCase().replace(/[^a-z0-9]/g, "");
   }
 
-  function guessWholePhrase(guess) {
+  function guessWord(guess) {
     if (!state || state.finished || !guess.trim()) return;
-    if (normalizeForCompare(guess) === normalizeForCompare(state.phrase)) {
-      state.guessed = new Set(state.phraseLetters);
+    const normalizedGuess = normalizeWord(guess);
+    const phraseWords = state.phrase.split(" ").map(normalizeWord);
+
+    if (normalizedGuess && phraseWords.includes(normalizedGuess)) {
+      normalizedGuess.split("").forEach((ch) => {
+        if (isLetter(ch)) state.guessed.add(ch.toUpperCase());
+      });
       refreshBoard();
       refreshGuessedLetters();
-      finishGame("win");
+      updateStatusPill();
+      if (checkWin()) {
+        finishGame("win");
+      }
     } else {
       state.wrong += 1;
       updateGallows();
@@ -278,9 +282,9 @@
 
   // ---- Game screen wiring ----
 
-  wordGuessBtn.addEventListener("click", () => guessWholePhrase(wordGuessInput.value));
+  wordGuessBtn.addEventListener("click", () => guessWord(wordGuessInput.value));
   wordGuessInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") guessWholePhrase(wordGuessInput.value);
+    if (e.key === "Enter") guessWord(wordGuessInput.value);
   });
 
   revealBtn.addEventListener("click", () => {
