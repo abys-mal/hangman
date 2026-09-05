@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hangman</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- SETUP SCREEN -->
+  <section id="setup-screen" class="screen">
+    <div class="setup-card">
+      <h1 class="brand">HANGMAN</h1>
+      <p class="setup-sub">Host setup &mdash; not shown to players</p>
+      <label for="phrase-input" class="setup-label">Enter the secret word or sentence</label>
+      <input
+        id="phrase-input"
+        type="password"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        maxlength="120"
+        placeholder="Type the answer here..."
+      >
+      <button id="reveal-toggle" type="button" class="link-btn">👁 show text</button>
+
+      <div class="setup-options">
+        <label class="chip">
+          <input type="checkbox" id="max-guesses-6" checked disabled>
+          6 wrong guesses allowed
+        </label>
+      </div>
+
+      <button id="start-btn" class="primary-btn" disabled>Start Game</button>
+      <p id="setup-error" class="setup-error"></p>
+    </div>
+  </section>
+
+  <!-- GAME SCREEN -->
+  <section id="game-screen" class="screen hidden">
+    <header class="topbar">
+      <h1 class="brand small">HANGMAN</h1>
+      <div class="status-pill" id="status-pill">Guess the phrase!</div>
+      <button id="new-game-btn" class="ghost-btn">New Game</button>
+    </header>
+
+    <main class="game-main">
+      <div class="gallows-wrap">
+        <svg id="gallows" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
+          <!-- static gallows -->
+          <line class="part base" x1="20" y1="245" x2="140" y2="245" />
+          <line class="part pole" x1="55" y1="245" x2="55" y2="20" />
+          <line class="part beam" x1="55" y1="20" x2="150" y2="20" />
+          <line class="part rope" x1="150" y1="20" x2="150" y2="55" />
+
+          <!-- body parts, revealed on wrong guesses -->
+          <circle id="part-head" class="part body-part" cx="150" cy="75" r="20" />
+          <line id="part-body" class="part body-part" x1="150" y1="95" x2="150" y2="155" />
+          <line id="part-arm-l" class="part body-part" x1="150" y1="110" x2="120" y2="140" />
+          <line id="part-arm-r" class="part body-part" x1="150" y1="110" x2="180" y2="140" />
+          <line id="part-leg-l" class="part body-part" x1="150" y1="155" x2="125" y2="200" />
+          <line id="part-leg-r" class="part body-part" x1="150" y1="155" x2="175" y2="200" />
+
+          <!-- face, shown only on loss -->
+          <g id="face" class="face hidden">
+            <line x1="142" y1="68" x2="148" y2="74" />
+            <line x1="148" y1="68" x2="142" y2="74" />
+            <line x1="152" y1="68" x2="158" y2="74" />
+            <line x1="158" y1="68" x2="152" y2="74" />
+            <path d="M 142 84 Q 150 78 158 84" />
+          </g>
+        </svg>
+        <div class="wrong-counter"><span id="wrong-count">0</span> / 6 wrong</div>
+      </div>
+
+      <div class="board-wrap">
+        <div id="word-board" class="word-board"></div>
+
+        <div class="guess-word-row">
+          <input id="word-guess-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Guess the whole word or sentence...">
+          <button id="word-guess-btn" class="secondary-btn">Guess Phrase</button>
+        </div>
+
+        <div id="keyboard" class="keyboard"></div>
+
+        <div class="action-row">
+          <button id="reveal-btn" class="danger-btn">Reveal Answer</button>
+        </div>
+      </div>
+    </main>
+
+    <div id="overlay" class="overlay hidden">
+      <div class="overlay-card">
+        <h2 id="overlay-title"></h2>
+        <p id="overlay-answer" class="overlay-answer"></p>
+        <button id="overlay-new-game" class="primary-btn">Play Again</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>
