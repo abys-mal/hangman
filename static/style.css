@@ -338,13 +338,13 @@ button { font-family: inherit; cursor: pointer; }
 .word-board {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem 0.5rem;
+  gap: 1rem 0.7rem;
   justify-content: center;
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 2rem 1.5rem;
-  min-height: 140px;
+  padding: 3rem 2rem;
+  min-height: 260px;
   align-content: center;
 }
 
@@ -352,11 +352,11 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(1.8rem, 3.4vw, 3rem);
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
   font-weight: 700;
   min-width: 0.9em;
   height: 1.3em;
-  border-bottom: 4px solid var(--border);
+  border-bottom: 5px solid var(--border);
   color: var(--text);
   transition: color 0.15s ease, border-color 0.15s ease, transform 0.2s ease;
 }
@@ -406,48 +406,40 @@ button { font-family: inherit; cursor: pointer; }
 
 #word-guess-input:focus { border-color: var(--accent-2); }
 
-.keyboard {
+.guessed-letters {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  min-height: 2.4rem;
+}
+
+.guessed-chip {
+  display: inline-flex;
   align-items: center;
-}
-
-.keyboard-row {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.key-btn {
-  min-width: 2.6rem;
-  height: 3rem;
-  font-size: 1.2rem;
+  justify-content: center;
+  min-width: 2.2rem;
+  height: 2.2rem;
+  padding: 0 0.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
   font-weight: 700;
-  border-radius: 10px;
   border: 2px solid var(--border);
   background: var(--bg-panel-2);
-  color: var(--text);
-  transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+  color: var(--text-dim);
 }
 
-.key-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  border-color: var(--accent-2);
-}
-
-.key-btn:disabled { cursor: default; }
-
-.key-btn.correct {
-  background: rgba(61, 220, 132, 0.18);
+.guessed-chip.correct {
   border-color: var(--correct);
   color: var(--correct);
+  background: rgba(61, 220, 132, 0.12);
 }
 
-.key-btn.incorrect {
-  background: rgba(255, 84, 112, 0.18);
+.guessed-chip.incorrect {
   border-color: var(--wrong);
   color: var(--wrong);
-  opacity: 0.7;
+  background: rgba(255, 84, 112, 0.12);
+  opacity: 0.8;
 }
 
 .action-row {

@@ -20,7 +20,7 @@
   const wordBoard = document.getElementById("word-board");
   const wordGuessInput = document.getElementById("word-guess-input");
   const wordGuessBtn = document.getElementById("word-guess-btn");
-  const keyboard = document.getElementById("keyboard");
+  const guessedLettersEl = document.getElementById("guessed-letters");
   const revealBtn = document.getElementById("reveal-btn");
   const newGameBtn = document.getElementById("new-game-btn");
   const wrongCountEl = document.getElementById("wrong-count");
@@ -32,29 +32,10 @@
   const overlayAnswer = document.getElementById("overlay-answer");
   const overlayNewGame = document.getElementById("overlay-new-game");
 
-  const KEY_ROWS = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
-
   let state = null;
 
   function isLetter(ch) {
     return /[a-zA-Z]/.test(ch);
-  }
-
-  function buildKeyboard() {
-    keyboard.innerHTML = "";
-    KEY_ROWS.forEach((row) => {
-      const rowEl = document.createElement("div");
-      rowEl.className = "keyboard-row";
-      row.split("").forEach((letter) => {
-        const btn = document.createElement("button");
-        btn.className = "key-btn";
-        btn.textContent = letter;
-        btn.dataset.letter = letter;
-        btn.addEventListener("click", () => guessLetter(letter));
-        rowEl.appendChild(btn);
-      });
-      keyboard.appendChild(rowEl);
-    });
   }
 
   function buildBoard(phrase) {
@@ -99,20 +80,16 @@
     });
   }
 
-  function refreshKeyboard() {
-    keyboard.querySelectorAll(".key-btn").forEach((btn) => {
-      const letter = btn.dataset.letter;
-      btn.classList.remove("correct", "incorrect");
-      btn.disabled = state.finished;
-      if (state.guessed.has(letter)) {
-        btn.disabled = true;
-        if (state.phraseLetters.has(letter)) {
-          btn.classList.add("correct");
-        } else {
-          btn.classList.add("incorrect");
-        }
-      }
-    });
+  function refreshGuessedLetters() {
+    guessedLettersEl.innerHTML = "";
+    [...state.guessed]
+      .sort()
+      .forEach((letter) => {
+        const chip = document.createElement("span");
+        chip.className = "guessed-chip " + (state.phraseLetters.has(letter) ? "correct" : "incorrect");
+        chip.textContent = letter;
+        guessedLettersEl.appendChild(chip);
+      });
   }
 
   function updateGallows() {
@@ -159,7 +136,7 @@
     updateGallows();
     updateStatusPill();
     refreshBoard();
-    refreshKeyboard();
+    refreshGuessedLetters();
     wordGuessInput.disabled = true;
     wordGuessBtn.disabled = true;
     revealBtn.disabled = true;
@@ -177,7 +154,7 @@
       state.wrong += 1;
     }
     refreshBoard();
-    refreshKeyboard();
+    refreshGuessedLetters();
     updateGallows();
     updateStatusPill();
 
@@ -197,7 +174,7 @@
     if (normalizeForCompare(guess) === normalizeForCompare(state.phrase)) {
       state.guessed = new Set(state.phraseLetters);
       refreshBoard();
-      refreshKeyboard();
+      refreshGuessedLetters();
       finishGame("win");
     } else {
       state.wrong += 1;
@@ -228,7 +205,6 @@
     };
 
     buildBoard(phrase);
-    buildKeyboard();
     wordGuessInput.disabled = false;
     wordGuessBtn.disabled = false;
     revealBtn.disabled = false;
@@ -238,7 +214,7 @@
     updateGallows();
     updateStatusPill();
     refreshBoard();
-    refreshKeyboard();
+    refreshGuessedLetters();
 
     setupScreen.classList.add("hidden");
     gameScreen.classList.remove("hidden");
